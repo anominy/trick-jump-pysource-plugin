@@ -20,7 +20,6 @@ from types import MappingProxyType as MappingProxy
 from messages import SayText2
 from menus import PagedMenu, PagedOption
 from commands.typed import TypedSayCommand, TypedClientCommand, CommandInfo
-from weapons.entity import Weapon
 from players.entity import Player
 from commands import CommandReturn
 
@@ -121,10 +120,18 @@ def _get_weapon_type(weapon_class: str) -> int:
 @TypedSayCommand('/weapons')
 @TypedClientCommand('sm_weapons')
 @TypedClientCommand('sp_weapons')
+@TypedSayCommand('!weapon')
+@TypedSayCommand('/weapon')
+@TypedClientCommand('sm_weapon')
+@TypedClientCommand('sp_weapon')
 @TypedSayCommand('!guns')
 @TypedSayCommand('/guns')
 @TypedClientCommand('sm_guns')
 @TypedClientCommand('sp_guns')
+@TypedSayCommand('!gun')
+@TypedSayCommand('/gun')
+@TypedClientCommand('sm_gun')
+@TypedClientCommand('sp_gun')
 def on_weapons_cmd(info: CommandInfo) -> CommandReturn:
     global _menu
     _menu.send(info.index)
