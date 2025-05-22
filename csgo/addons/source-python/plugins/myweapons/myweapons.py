@@ -91,9 +91,6 @@ _menu: Final[PagedMenu] = PagedMenu(
 
 @_menu.register_select_callback
 def menu_select_callback(menu: PagedMenu, index: int, option: PagedOption) -> PagedMenu:
-    SayText2(str(option.value)) \
-        .send()
-
     selected_weapon: Final[str] = _weapons[option.value][0]
     selected_weapon_type: Final[int] = _weapons[option.value][2]
 
