@@ -19,7 +19,6 @@ from typing import Any, Final
 from events import Event, GameEvent
 from messages import SayText2
 from players.entity import Player
-from entities.constants import DamageTypes
 from cvars import cvar
 
 
