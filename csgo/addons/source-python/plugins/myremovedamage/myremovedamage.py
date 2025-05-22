@@ -31,7 +31,7 @@ def unload() -> None:
         .send()
 
 
-_weapon_grenades: Final[tuple] = (
+_weapon_grenades: Final[tuple[str, ...]] = (
     'inferno',
     'hegrenade',
     # 'molotov',
