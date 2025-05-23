@@ -36,19 +36,21 @@ def unload() -> None:
 
 @TypedClientCommand('drop')
 def on_drop_cmd(info: CommandInfo) -> CommandReturn:
-    _remove_dropped_weapons()
-    return CommandReturn.CONTINUE
+    player: Final[Player] = Player(info.index)
+    player.get_active_weapon() \
+        .remove()
+
+    return CommandReturn.BLOCK
 
 
-def _remove_dropped_weapons() -> None:
-    weapon_indices: Final[list[int]] = []
-    for player in PlayerIter():
-        for weapon in player.weapons():
-            weapon_indices.append(weapon.index)
-
-    for entity in EntityIter():
-        if entity.classname.startswith('weapon_'):
-            if entity.index in weapon_indices:
-                continue
-
-            entity.remove()
+# def _remove_dropped_weapons() -> None:
+#     weapon_indices: Final[list[int]] = []
+#     for player in PlayerIter():
+#         weapon_indices.extend(player.weapon_indexes())
+#
+#     for entity in EntityIter():
+#         if entity.classname.startswith('weapon_'):
+#             if entity.index in weapon_indices:
+#                 continue
+#
+#             entity.remove()
