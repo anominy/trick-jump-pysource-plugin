@@ -48,8 +48,9 @@ def on_client_disconnect(index: int) -> None:
     if index not in _player_weapons:
         return
 
-    _player_weapons[index] \
-        .clear()
+    if index in _player_weapons:
+        _player_weapons[index] \
+            .clear()
 
 
 @Event('player_death')
@@ -74,8 +75,8 @@ def on_player_spawn(event: GameEvent) -> None:
     if player_index not in _player_weapons:
         _player_weapons[player_index] = []
 
-    for weapon in _player_weapons[player_index]:
-        player.give_named_item(weapon)
+    for weapon_name in _player_weapons[player_index]:
+        player.give_named_item(weapon_name)
 
 
 # noinspection PyTypeChecker
@@ -145,18 +146,20 @@ def menu_select_callback(menu: PagedMenu, index: int, option: PagedOption) -> Pa
     if index not in _player_weapons:
         _player_weapons[index] = []
 
-    player_weapons: Final[list[str]] = _player_weapons[index]
     for weapon in player.weapons():
         weapon_type: int = _get_weapon_type(weapon.classname)
         if weapon_type == selected_weapon_type:
-            weapon.remove()
             try:
-                player_weapons.remove(weapon.classname)
+                _player_weapons[index] \
+                        .remove(weapon.weapon_name)
             except ValueError:
                 pass
+            weapon.remove()
 
     player.give_named_item(selected_weapon)
-    player_weapons.append(selected_weapon)
+    _player_weapons[index] \
+        .append(selected_weapon)
+
     return menu
 
 
@@ -176,11 +179,11 @@ def on_drop_cmd(info: CommandInfo) -> CommandReturn:
 
     try:
         _player_weapons[player_index] \
-            .remove(player_weapon.classname)
+            .remove(player_weapon.weapon_name)
     except ValueError:
         pass
-
     player_weapon.remove()
+
     return CommandReturn.BLOCK
 
 
