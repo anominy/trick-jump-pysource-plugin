@@ -45,6 +45,6 @@ _weapon_grenades: Final[tuple[str, ...]] = (
 def on_player_hurt(event: GameEvent) -> None:
     weapon_name: Final[str] = event['weapon']
     if weapon_name in _weapon_grenades:
-        victim_user_id: Final[int] = event['userid']
+        victim_user_id: Final[int] = int(event['userid'])
         victim_player: Final[Player] = Player.from_userid(victim_user_id)
         victim_player.health += int(event['dmg_health'])
