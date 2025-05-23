@@ -18,10 +18,14 @@
 from typing import Final, Tuple
 from types import MappingProxyType as MappingProxy
 from messages import SayText2
+from events import Event, GameEvent
 from menus import PagedMenu, PagedOption
 from commands.typed import TypedSayCommand, TypedClientCommand, CommandInfo
 from players.entity import Player
+from weapons.entity import Weapon
 from commands import CommandReturn
+from filters.entities import EntityIter
+from listeners import OnClientDisconnect
 
 
 def load() -> None:
@@ -34,7 +38,48 @@ def unload() -> None:
         .send()
 
 
-_weapons: Final[MappingProxy[int, Tuple[str, str, int]]] = MappingProxy({
+_player_weapons: Final[dict[int, list[str]]] = {}
+
+
+@OnClientDisconnect
+def on_client_disconnect(index: int) -> None:
+    global _player_weapons
+
+    if index not in _player_weapons:
+        return
+
+    _player_weapons[index] \
+        .clear()
+
+
+@Event('player_death')
+def on_player_death(event: GameEvent) -> None:
+    for entity in EntityIter('weapon_c4'):
+        entity.remove()
+
+
+@Event('player_spawn')
+def on_player_spawn(event: GameEvent) -> None:
+    global _player_weapons
+
+    player: Final[Player] = Player.from_userid(int(event['userid']))
+    if player.is_fake_client() \
+            or player.is_bot():
+        return
+
+    for weapon in player.weapons():
+        weapon.remove()
+
+    player_index: Final[int] = player.index
+    if player_index not in _player_weapons:
+        _player_weapons[player_index] = []
+
+    for weapon in _player_weapons[player_index]:
+        player.give_named_item(weapon)
+
+
+# noinspection PyTypeChecker
+_weapons: Final[dict[int, Tuple[str, str, int]]] = MappingProxy({
     0: ('weapon_ak47', 'AK-47', 1),
     1: ('weapon_m4a1', 'M4A4', 1),
     2: ('weapon_m4a1_silencer', 'M4A1-S', 1),
@@ -91,18 +136,52 @@ _menu: Final[PagedMenu] = PagedMenu(
 
 @_menu.register_select_callback
 def menu_select_callback(menu: PagedMenu, index: int, option: PagedOption) -> PagedMenu:
+    global _player_weapons
+
     selected_weapon: Final[str] = _weapons[option.value][0]
     selected_weapon_type: Final[int] = _weapons[option.value][2]
 
     player: Final[Player] = Player(index)
+    if index not in _player_weapons:
+        _player_weapons[index] = []
+
+    player_weapons: Final[list[str]] = _player_weapons[index]
     for weapon in player.weapons():
         weapon_type: int = _get_weapon_type(weapon.classname)
         if weapon_type == selected_weapon_type:
             weapon.remove()
+            try:
+                player_weapons.remove(weapon.classname)
+            except ValueError:
+                pass
 
     player.give_named_item(selected_weapon)
-
+    player_weapons.append(selected_weapon)
     return menu
+
+
+@TypedClientCommand('drop')
+def on_drop_cmd(info: CommandInfo) -> CommandReturn:
+    global _player_weapons
+
+    player: Final[Player] = Player(info.index)
+    player_index: Final[int] = player.index
+    player_weapon: Final[Weapon] = player.get_active_weapon()
+
+    if player_weapon is None:
+        return CommandReturn.BLOCK
+
+    if player_index not in _player_weapons:
+        _player_weapons[player_index] = []
+
+    try:
+        _player_weapons[player_index] \
+            .remove(player_weapon.classname)
+    except ValueError:
+        pass
+
+    player_weapon.remove()
+    return CommandReturn.BLOCK
 
 
 def _get_weapon_type(weapon_class: str) -> int:
