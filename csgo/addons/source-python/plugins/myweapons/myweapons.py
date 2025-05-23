@@ -87,7 +87,7 @@ _weapons: Final[dict[int, Tuple[str, str, int]]] = MappingProxy({
     3: ('weapon_famas', 'FAMAS', 1),
     4: ('weapon_galilar', 'Galil AR', 1),
     5: ('weapon_aug', 'AUG', 1),
-    6: ('weapon_sg553', 'SG-553', 1),
+    6: ('weapon_sg556', 'SG-553', 1),
     7: ('weapon_deagle', 'Desert Eagle', 2),
     8: ('weapon_revolver', 'R8 Revolver', 2),
     9: ('weapon_glock', 'Glock-18', 2),
