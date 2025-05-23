@@ -147,11 +147,12 @@ def menu_select_callback(menu: PagedMenu, index: int, option: PagedOption) -> Pa
         _player_weapons[index] = []
 
     for weapon in player.weapons():
-        weapon_type: int = _get_weapon_type(weapon.classname)
+        weapon_name: str = weapon.weapon_name
+        weapon_type: int = _get_weapon_type(weapon_name)
         if weapon_type == selected_weapon_type:
             try:
                 _player_weapons[index] \
-                        .remove(weapon.weapon_name)
+                        .remove(weapon_name)
             except ValueError:
                 pass
             weapon.remove()
