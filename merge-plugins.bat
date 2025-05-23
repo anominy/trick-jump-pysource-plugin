@@ -1,6 +1,7 @@
 @echo off
 
-call :xcopy "%~dp0plugins\sourcepython\csgo" "%~dp0server\kty++trick\csgo"
+:: call :xcopy "%~dp0plugins\sourcepython\csgo" "%~dp0server\kty++trick\csgo"
+:: call :xcopy "%~ddp0plugins\showcountry\csgo" "%~dp0server\kty++trick\csgo"
 exit /b 0
 
 :xcopy
