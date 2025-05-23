@@ -168,12 +168,12 @@ def on_drop_cmd(info: CommandInfo) -> CommandReturn:
     global _player_weapons
 
     player: Final[Player] = Player(info.index)
-    player_index: Final[int] = player.index
-    player_weapon: Final[Weapon] = player.get_active_weapon()
 
+    player_weapon: Final[Weapon] = player.get_active_weapon()
     if player_weapon is None:
         return CommandReturn.BLOCK
 
+    player_index: Final[int] = player.index
     if player_index not in _player_weapons:
         _player_weapons[player_index] = []
 
