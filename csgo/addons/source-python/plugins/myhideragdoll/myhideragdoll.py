@@ -15,13 +15,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Final, Optional, Any
+from typing import Final
 from messages import SayText2
-from entities.entity import BaseEntity, Entity
-from entities import CheckTransmitInfo
-from entities.helpers import index_from_edict
-from entities.hooks import EntityCondition, EntityPreHook
-from memory import make_object
 from players.entity import Player
 from commands.typed import TypedSayCommand, TypedClientCommand, CommandInfo
 from commands import CommandReturn
@@ -39,27 +34,6 @@ def on_client_disconnect(index: int) -> None:
         return
 
     _players_enable.remove(index)
-
-
-@EntityPreHook(EntityCondition.equals_entity_classname('cs_ragdoll'), 'set_transmit')
-def on_pre_set_transmit(args: Any) -> Optional[bool]:
-    global _players_enable
-
-    entity: Final[Entity] = make_object(Entity, args[0])
-    if entity.classname != 'cs_ragdoll':
-        return None
-
-    info: Final[CheckTransmitInfo] = make_object(CheckTransmitInfo, args[1])
-    edict: Final[Any] = info.client
-    player: Final[Player] = Player(index_from_edict(edict))
-
-    if player.index == entity.index:
-        return None
-
-    if player.index in _players_enable:
-        entity.remove()
-
-    return None
 
 
 @TypedSayCommand('!hideragdoll')
