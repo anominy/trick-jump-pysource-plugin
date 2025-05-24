@@ -64,13 +64,12 @@ def on_fall_damage_cmd(info: CommandInfo) -> CommandReturn:
     player: Final[Player] = Player(info.index)
     player_index: Final[int] = player.index
 
-    is_enabled: bool
-    if player_index in _players_enable:
+    is_enabled: Final[bool] \
+        = player_index in _players_enable
+    if not is_enabled:
         _players_enable.remove(player_index)
-        is_enabled = False
     else:
         _players_enable.append(player_index)
-        is_enabled = True
 
     player_name: Final[str] = player.name
     SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is ' \
