@@ -51,6 +51,8 @@ def on_entity_created(entity: BaseEntity) -> None:
             or not _last_attackers:
         return
 
+    # Works cause of `if entity.classname != 'cs_ragdoll``
+    #  It doesn't track associated class names of entities.
     if _last_entities \
             and entity.index == _last_entities.pop(0):
         return
