@@ -17,13 +17,19 @@
 
 from typing import Final
 from messages import SayText2
+from events import Event, GameEvent
+from events.hooks import PreEvent
 from players.entity import Player
+from players.helpers import index_from_userid
+from entities.entity import BaseEntity
 from commands.typed import TypedSayCommand, TypedClientCommand, CommandInfo
 from commands import CommandReturn
-from listeners import OnClientDisconnect
+from listeners import OnClientDisconnect, OnEntityCreated
 
 
 _players_enable: Final[list[int]] = []
+_last_attackers: Final[list[int]] = []
+_last_entities: Final[list[int]] = []
 
 
 @OnClientDisconnect
@@ -34,6 +40,34 @@ def on_client_disconnect(index: int) -> None:
         return
 
     _players_enable.remove(index)
+
+
+@OnEntityCreated
+def on_entity_created(entity: BaseEntity) -> None:
+    global _last_entities
+    global _players_enable
+
+    if entity.classname != 'cs_ragdoll' \
+            or not _last_attackers:
+        return
+
+    if _last_entities \
+            and entity.index == _last_entities.pop(0):
+        return
+    _last_entities.append(entity.index)
+
+    attacker_index: Final[int] = _last_attackers.pop(0)
+    if attacker_index == 0 \
+            or attacker_index not in _players_enable:
+        return
+
+    entity.remove()
+
+
+@PreEvent('player_death')
+def on_player_death(event: GameEvent) -> None:
+    attacker_index: Final[int] = index_from_userid(int(event['attacker']))
+    _last_attackers.append(attacker_index)
 
 
 @TypedSayCommand('!hideragdoll')
