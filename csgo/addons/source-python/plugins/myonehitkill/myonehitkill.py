@@ -38,7 +38,9 @@ def on_player_hurt(event: GameEvent) -> None:
 
 
 def _is_valid_attack(victim_user_id: int, attacker_user_id: int) -> bool:
-    if victim_user_id == attacker_user_id:
+    if victim_user_id == attacker_user_id \
+            or victim_user_id == 0 \
+            or attacker_user_id == 0:
         return False
 
     cvar_mp_teammates_are_enemies: Final[Any] = cvar.find_var('mp_teammates_are_enemies')
