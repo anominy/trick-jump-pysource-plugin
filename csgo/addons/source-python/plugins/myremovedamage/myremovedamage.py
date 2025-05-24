@@ -38,3 +38,4 @@ def on_player_hurt(event: GameEvent) -> None:
         victim_user_id: Final[int] = int(event['userid'])
         victim_player: Final[Player] = Player.from_userid(victim_user_id)
         victim_player.health += int(event['dmg_health'])
+        victim_player.armor += int(event['dmg_armor']) + 1
