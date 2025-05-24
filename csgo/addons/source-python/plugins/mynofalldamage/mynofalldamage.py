@@ -19,10 +19,63 @@ from typing import Final
 from events import Event, GameEvent
 from messages import SayText2
 from players.entity import Player
+from commands.typed import TypedSayCommand, TypedClientCommand, CommandInfo
+from commands import CommandReturn
+from listeners import OnClientDisconnect
+
+
+_players_enable: Final[list[int]] = []
+
+
+@OnClientDisconnect
+def on_client_disconnect(index: int) -> None:
+    global _players_enable
+
+    if index not in _players_enable:
+        return
+
+    _players_enable.remove(index)
 
 
 @Event('player_falldamage')
 def on_player_fall_damage(event: GameEvent) -> None:
+    global _players_enable
+
     player: Final[Player] = Player.from_userid(int(event['userid']))
+    player_index: Final[int] = player.index
+    if player_index in _players_enable:
+        return
+
     player_damage: Final[int] = int(event['damage'])
     player.health += player_damage
+
+
+@TypedSayCommand('!falldamage')
+@TypedSayCommand('/falldamage')
+@TypedClientCommand('sm_falldamage')
+@TypedClientCommand('sp_falldamage')
+@TypedSayCommand('!fd')
+@TypedSayCommand('/fd')
+@TypedClientCommand('sm_fd')
+@TypedClientCommand('sp_fd')
+def on_fall_damage_cmd(info: CommandInfo) -> CommandReturn:
+    global _players_enable
+
+    player: Final[Player] = Player(info.index)
+    player_index: Final[int] = player.index
+
+    is_enabled: bool
+    if player_index in _players_enable:
+        _players_enable.remove(player_index)
+        is_enabled = False
+    else:
+        _players_enable.append(player_index)
+        is_enabled = True
+
+    player_name: Final[str] = player.name
+    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is ' \
+             + ('enabled' if is_enabled else 'disabled') \
+             + ' \x05fall damage\x08!') \
+         .send()
+
+    return CommandReturn.BLOCK
