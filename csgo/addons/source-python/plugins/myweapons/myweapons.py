@@ -28,16 +28,6 @@ from filters.entities import EntityIter
 from listeners import OnClientDisconnect
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myweapons\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myweapons\x08 plugin is unloaded!') \
-        .send()
-
-
 _player_weapons: Final[dict[int, list[str]]] = {}
 
 

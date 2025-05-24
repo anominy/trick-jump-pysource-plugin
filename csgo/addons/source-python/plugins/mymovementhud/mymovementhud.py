@@ -25,16 +25,6 @@ from colors import WHITE, GRAY, BLACK
 from commands import CommandReturn
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09mymovementhud\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09mymovementhud\x08 plugin is unloaded!') \
-        .send()
-
-
 use_show_menu: bool = False
 use_hint_text: bool = False
 use_text_msg: bool = False

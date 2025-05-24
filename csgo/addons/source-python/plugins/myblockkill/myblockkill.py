@@ -21,16 +21,6 @@ from commands.server import ServerCommand
 from commands import CommandReturn
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myblockkill\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myblockkill\x08 plugin is unloaded!') \
-        .send()
-
-
 @ServerCommand('kill')
 def on_kill_cmd(command: Any) -> CommandReturn:
     return CommandReturn.BLOCK

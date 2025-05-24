@@ -15,24 +15,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from events import Event, GameEvent
 from messages import SayText2
-from players.entity import Player
+from listeners import OnPluginLoaded, OnPluginUnloaded
+from plugins.instance import Plugin
 
 
-@Event('bomb_beginplant')
-def on_bomb_begin_plant(event: GameEvent) -> None:
-    player: Player = Player.from_userid(event['userid'])
-    player_name: str = player.get_name()
-
-    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is started planting the bomb!') \
+@OnPluginLoaded
+def on_plugin_loaded(plugin: Plugin) -> None:
+    SayText2('\x03>^< \x08| The \x09' + plugin.name + '\x08 plugin is loaded!') \
         .send()
 
 
-@Event('bomb_abortplant')
-def on_bomb_abort_plant(event: GameEvent) -> None:
-    player: Player = Player.from_userid(event['userid'])
-    player_name: str = player.get_name()
-
-    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is aborted planting the bomb!') \
+@OnPluginUnloaded
+def on_plugin_unloaded(plugin: Plugin) -> None:
+    SayText2('\x03>^< \x08| The \x09' + plugin.name + '\x08 plugin is unloaded!') \
         .send()

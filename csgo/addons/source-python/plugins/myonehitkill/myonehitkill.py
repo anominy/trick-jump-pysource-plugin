@@ -22,16 +22,6 @@ from players.entity import Player
 from cvars import cvar
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myonehitkill\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myonehitkill\x08 plugin is unloaded!') \
-        .send()
-
-
 @Event('player_hurt')
 def on_player_hurt(event: GameEvent) -> None:
     victim_health: Final[int] = int(event['health'])

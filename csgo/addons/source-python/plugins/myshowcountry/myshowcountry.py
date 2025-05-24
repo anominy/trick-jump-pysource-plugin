@@ -26,16 +26,6 @@ from geoip2.database import Reader as GeoIp2Reader
 from geoip2.errors import AddressNotFoundError
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myshowcountry\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myshowcountry\x08 plugin is unloaded!') \
-        .send()
-
-
 @Event('player_spawn')
 def on_player_spawn(event: GameEvent) -> None:
     player: Final[Player] = Player.from_userid(int(event['userid']))

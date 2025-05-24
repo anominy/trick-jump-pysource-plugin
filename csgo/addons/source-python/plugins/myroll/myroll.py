@@ -24,16 +24,6 @@ from commands import CommandReturn
 import random
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myroll\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myroll\x08 plugin is unloaded!') \
-        .send()
-
-
 @TypedSayCommand('!roll')
 @TypedSayCommand('/roll')
 @TypedClientCommand('sm_roll')

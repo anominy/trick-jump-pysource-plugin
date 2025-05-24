@@ -21,16 +21,6 @@ from events import Event, GameEvent
 from players.entity import Player
 
 
-def load() -> None:
-    SayText2('\x03>^< \x08| The \x09myremovedamage\x08 plugin is loaded!') \
-        .send()
-
-
-def unload() -> None:
-    SayText2('\x03>^< \x08| The \x09myremovedamage\x08 plugin is unloaded!') \
-        .send()
-
-
 _weapon_grenades: Final[tuple[str, ...]] = (
     'inferno',
     'hegrenade',
