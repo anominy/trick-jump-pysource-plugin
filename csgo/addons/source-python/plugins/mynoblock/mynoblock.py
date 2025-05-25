@@ -82,7 +82,7 @@ def on_no_block_cmd(info: CommandInfo) -> CommandReturn:
         player.color = Color(255, 255, 255, 255)
 
     player.set_noblock(player_block)
-    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is ' \
+    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 has ' \
              + ('enabled' if player_block else 'disabled') \
              + ' \x05no block\x08!') \
         .send()

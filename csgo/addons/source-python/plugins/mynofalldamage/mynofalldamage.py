@@ -72,7 +72,7 @@ def on_fall_damage_cmd(info: CommandInfo) -> CommandReturn:
         _players_enable.append(player_index)
 
     player_name: Final[str] = player.name
-    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is ' \
+    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 has ' \
              + ('enabled' if is_enabled else 'disabled') \
              + ' \x05fall damage\x08!') \
          .send()

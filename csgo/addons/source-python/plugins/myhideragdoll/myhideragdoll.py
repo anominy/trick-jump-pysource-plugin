@@ -106,7 +106,7 @@ def on_hide_cmd(info: CommandInfo) -> CommandReturn:
         _players_enable.remove(player_index)
 
     player_name: Final[str] = player.name
-    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 is ' \
+    SayText2('\x03>^< \x08| \x09' + player_name + '\x08 has ' \
              + ('enabled' if not is_enable else 'disabled') \
              + ' \x05ragdolls\x08!') \
          .send()
