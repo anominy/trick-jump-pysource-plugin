@@ -51,7 +51,8 @@ def on_pre_set_transmit(args: Any) -> Optional[bool]:
     edict: Final[Any] = info.client
     player: Final[Player] = Player(index_from_edict(edict))
 
-    if player.index == entity.index:
+    if player.index == entity.index \
+            or player.health <= 0:
         return None
 
     if player.index in _players_enable:
